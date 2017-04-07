@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<link rel="stylesheet" href="CssRegister.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Brave Bank Register</title>
+
+			<!--[if lte IE 9]>
+				<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+			<![endif]-->
+
+			<script>
+			function myConfirm(){
+			if(confirm("Do you want to register ?") == true){
+				alert("Register Successfully !");
+				load("index.html")
+				}
+			else{
+				alert("Your Registration is Cancled!");
+				}
+			}
+			function load(url){location.href=url; }
+			</script>
+
+		<style type="text/css">
+/*for 1200px or less*/
+@media screen and (max-width:1200px){
+	body {width:100%;}
+
+	#search{margin-left:80%;}
+
+	#headline img{width:95%;
+	margin-top:0px;}
+
+	#buttonlink{margin-top:-25%;
+	margin-left:40%;
+	background:#FFFFFF;}
+
+	#iconlinkHomepage{margin-top:0;
+	margin-left:50%;}
+
+	#share{margin-top:3%;
+	margin-left:45%;}
+
+	#copyright{margin-left:60%;}
+}
+
+/*for 980px or less*/
+@media screen and (max-width:980px){
+	body {width:80%;}
+
+	#register{margin-left:-10%;}
+
+	#search{margin-left:90%;}
+
+	#headline img{width:120%;
+	margin-top:0px;}
+
+	#buttonlink{margin-top:-55%;
+	margin-left:45%;
+	background:#FFFFFF;}
+
+	#iconlinkHomepage{margin-top:0%;
+	margin-left:40%;}
+
+	#share{margin-top:10%;
+	margin-left:45%;}
+
+	#copyright{margin-top:15%;
+	margin-left:60%;}
+}
+
+/*for 700px or less*/
+@media screen and (max-width:700px){
+	body {width:30%;}
+
+	#register{margin-top:55%;
+	margin-left:-240%;}
+
+	#search{margin-top:0%;
+	margin-left:190%;}
+
+	#headline img{width:300%;
+	margin-top:0%;}
+
+	#text{margin-left:50px;
+	margin-right:-40%;}
+
+	#buttonlink{margin-top:-230%;
+	margin-left:0%;}
+
+	#iconlinkHomepage{margin-top:0;
+	margin-left:450px;}
+
+
+	#share{width:110%;
+	margin-top:20%;
+	margin-left:380px;}
+
+	#copyright{margin-top:25%;
+	margin-left:25%;}
+}
+		</style>
+		</style>
+	</head>
+
+	<body>
+	<div id="header">
+		<div id="logo">
+			<p><img src="HomePage.png" alt="HomePage" width="400px" height="111px"/></p>
+		</div>
+<br>
+		<div id="sublogo">
+			<p>Welcome to your Register Page!</p>
+		</div>
+	</div>
+
+		<div id="search">
+			<script type="text/javascript">
+			var domainroot="bravebank.com"
+			function Gsitesearch(curobj){
+			curobj.q.value="site:"+domainroot+" "+curobj.qfront.value}
+			</script>
+			<form action="http://www.Google.com/search" method="get" onSubmit="Gsitesearch(this)">
+				<input name="q" type="hidden"/>
+				<input name="qfront" type="text" style="width:130px"/><input type="submit" style="width:60px" value="Search">
+				</p>
+			</form>
+		</div>
+
+		<div id="headline">
+			<image src="seprationline.jpeg" alt="headline"/>
+		</div>
+
+		<div id="main">
+		<div id="text">
+			<p><b>REGISTER NOW !</b><p>
+			<p>If you are not registered yet and you want to create your online account, follow the steps bellow.
+			They will guide you to register your account and then you will be able to check it wherever you are, whenever you want.</p>
+
+			<table>
+				<tr>
+					<td>
+			Account No:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="string" name="name" size="50" /></br><!--link to database-->
+			Email Address:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="text" name="address" size="50"/></br>
+			Password:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			<input type="text" name="email" size="50"/></br>
+			Confirm Password:&nbsp
+			<input type="text" name="dob" size="50"/></br></br>
+			<input class="button" type="submit" alt="submitButton" onclick="myConfirm()" name="Submit" value="Register"/>
+					</td>
+				<tr>
+			</table>
+		</div>
+
+		<div id="buttonlink">
+		<div id="iconlinkHomepage">
+			<a href="index.html">&nbsp&nbsp<img src="Homepage.png" alt="HomePage" width="60px" height="60px"/></a><br/>
+			<a href="index.html">HomePage</a><br/>
+		</div>
+
+		</div>
+
+		<div id="share">
+			<table border="1" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>
+						<p>You can easily share Brave Bank Online. Click in Facebbok or Twitter.</p>
+
+						<a href="https://www.facebook.com/techselfoficial/"><img class="facebook" src="facebook.png" alt="Facebook" width="60px" height="60px"/></a>
+						<a href="https://www.facebook.com/techselfoficial/">Share on Facebook</a><br/>
+
+						<a href="Coming Soon.html"><img class="twitter" src="twitter.png" alt="Twitter" width="60px" height="60px"/></a>
+						<a href="Coming Soon.html">Share on Twitter</a><br/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		</div>
+
+		<div id="copyright">
+			<p>Copyright &copy 2017. Brave Bank. All rights reserved.</p>
+		</div>
+
+	</body>
+
+</html>
+

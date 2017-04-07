@@ -1,0 +1,61 @@
+a{text-decoration:none;
+color:blue;}
+a:hover{color:red;}
+
+#logo{width:400px;
+font-size:80px;
+background:#FFFFFF;
+font-family: 'Pacifico', cursive;}
+
+#sublogo{width:400px;
+margin-left:20px;
+margin-top:-118px;
+font-size:20px;
+background:#FFFFFF;
+font-family: 'Delius Unicase', cursive;
+font-weight:bold}
+
+#header{margin-top:-75px;}
+
+#search{width:200px;
+margin-top:-40px;
+margin-left:1000px;
+background:#FFFFFF}
+
+#headline img{width:1150px; 
+height:70px;
+margin-top:-9px;
+background:#FFFFFF}
+
+#main{margin-top:250px;}
+
+#text{margin-top:-240px;
+margin-left:50px;
+margin-right:59%;
+font-size:20px;
+font-family: 'Arial', cursive;
+background:#FFFFFF}
+
+#buttonlink{width:600px;
+margin-top:-280px;
+margin-left:570px;
+font-family: 'Gloria Hallelujah', cursive;
+background:#FFFFFF}
+
+#iconlinkHomepage{margin-top:0px;
+margin-left:250px;}
+
+#share{width:550px;
+margin-top:40px;
+margin-left:600px;
+font-family: 'Gloria Hallelujah', cursive;
+background:#FFFFFF;}
+
+.facebook{width:15px; height:15px}
+
+.twitter{width:15px; height:15px}
+
+#copyright{position:absolute;
+font-size:10px;
+margin-top:70px;
+margin-left:100px;}

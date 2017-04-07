@@ -1,0 +1,104 @@
+a{text-decoration:none;
+color:blue;}
+a:hover{color:red;}
+
+#logo{width:400px;
+font-size:80px;
+background:#FFFFFF;
+font-family:'Delius Unicase', cursive;}
+
+#sublogo{width:400px;
+margin-left:20px;
+margin-top:-105px;
+font-size:20px;
+background:#FFFFFF;
+font-family: 'Delius Unicase', cursive;
+font-weight:bold}
+
+#login{width:350px;
+font-size:13px;
+font-family: 'Delius Unicase', cursive;
+background:#FFFFFF;
+margin-top:-100px;
+margin-left:500px}
+
+.button{width:85px;}
+
+#register{font-family: 'Delius Unicase', cursive;
+margin-top:-150px;
+margin-left:230px;}
+
+#line{width:10px;
+margin-top:-90px;
+margin-left:835px;
+background:#FFFFFF;}
+
+#reset{width:150px;
+font-size:15px;
+background:#FFFFFF;
+margin-top:-85px;
+margin-left:850px}
+
+#header{margin-top:-75px;}
+
+#search{width:200px;
+margin-top:54px;
+margin-left:1000px;
+background:#FFFFFF}
+
+#headline img{width:1150px; 
+height:70px;
+margin-top:-9px;
+background:#FFFFFF}
+
+#main{margin-top:250px;}
+
+#text{margin-top:-240px;
+margin-left:50px;
+margin-right:59%;
+font-size:20px;
+font-family: 'Arial', cursive;
+background:#FFFFFF}
+
+#buttonlink{width:600px;
+margin-top:-350px;
+margin-left:570px;
+font-family: 'Gloria Hallelujah', cursive;
+background:#FFFFFF;}
+
+#iconlinkLoan{margin-top:0px;
+margin-left:100px;
+}
+
+#iconlinkMortgage{margin-top:-86px;
+margin-left:260px;}
+
+#iconlinkInsurance{margin-top:-86px;
+margin-left:420px;}
+
+#iconlinkNews{margin-top:50px;
+margin-left:20px;}
+
+#iconlinkYourAccount{margin-top:-86px;
+margin-left:180px;}
+
+#iconlinkSupport{margin-top:-86px;
+margin-left:340px;}
+
+#iconlinkContactus{margin-top:-86px;
+margin-left:500px;}
+
+#share{width:550px;
+margin-top:40px;
+margin-left:850px;
+font-family: 'Gloria Hallelujah', cursive;
+background:#FFFFFF;}
+
+.facebook{width:15px; height:15px}
+
+.twitter{width:15px; height:15px}
+
+#copyright{position:absolute;
+font-size:14px;
+margin-top:15px;
+margin-left:90px;}

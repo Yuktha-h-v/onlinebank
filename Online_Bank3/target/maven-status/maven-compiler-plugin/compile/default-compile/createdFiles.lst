@@ -1,0 +1,11 @@
+com\mycompany\models\service\AccountsFacadeREST.class
+com\mycompany\models\Transactions.class
+com\mycompany\models\Accounts_.class
+com\mycompany\models\Accounts.class
+com\mycompany\models\service\TransactionsFacadeREST.class
+com\mycompany\models\Customers_.class
+com\mycompany\models\service\AbstractFacade.class
+com\mycompany\models\service\ApplicationConfig.class
+com\mycompany\models\service\CustomersFacadeREST.class
+com\mycompany\models\Customers.class
+com\mycompany\models\Transactions_.class

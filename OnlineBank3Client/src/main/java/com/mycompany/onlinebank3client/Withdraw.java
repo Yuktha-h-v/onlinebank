@@ -5,19 +5,100 @@
  */
 package com.mycompany.onlinebank3client;
 
+import com.mycompany.models.Accounts;
+import com.mycompany.models.Transactions;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import org.json.JSONObject;
+
 /**
  *
  * @author Olga Minguett
  */
 public class Withdraw extends javax.swing.JFrame {
+    List<Accounts> accountsList;
+    List<String> accountIDString;
+    Accounts account;
 
-    /**
-     * Creates new form withdraw
-     */
     public Withdraw() {
         initComponents();
+
+        accountIDString = new ArrayList<>();
+        accountsList = new ArrayList<>();
     }
 
+    public void setAccount(List<Accounts> acList) {
+        this.accountsList = acList;
+
+        for (Accounts ac : accountsList) {
+            accountIDString.add(ac.getAccountId() + "");
+        }
+
+        this.accountIdField.setModel(new DefaultComboBoxModel(accountIDString.toArray()));
+    }
+
+    public void Withdraw() {
+        String getUrl = "http://localhost:8080/Online_Bank3/api/transactions";
+        Client client = Client.create();
+        WebResource target = client.resource(getUrl);
+
+        account = accountsList.get(accountIdField.getSelectedIndex());
+
+        BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
+
+        Transactions tran = new Transactions();
+        tran.setAccountId(account);
+        tran.setAmount(amount);
+        tran.setCustomerId(account.getCustomerId());
+        tran.setDescription(descriptionTextArea.getText());
+        tran.setTransactionType("Withdraw");
+
+        JSONObject param = new JSONObject(tran);
+
+        String entity = param.toString();
+        //creates the POST request
+        ClientResponse response = target.accept("application/json")
+                .type("application/json").post(ClientResponse.class, entity);
+
+        if (response.getStatus() == 204) {
+
+            JOptionPane.showMessageDialog(null, "You withdraw has been successful!");
+
+            BigDecimal newBalance = account.getAccountBalance().subtract(amount);
+            //set new balance to from account
+            account.setAccountBalance(newBalance);
+            //send update account information to the api
+            UpdateAccount(account);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "We couldn't process your request!");
+            System.out.println(response.getEntity(String.class));
+        }
+    }
+
+        private void UpdateAccount(Accounts account){
+        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/"+account.getAccountId();
+        Client client = Client.create();
+        WebResource target = client.resource(getUrl);
+        
+        JSONObject entity = new JSONObject(account);
+        
+        ClientResponse putresponse = target.accept("application/json")
+                    .type("application/json").put(ClientResponse.class, entity.toString());
+        
+        if (putresponse.getStatus() == 204) {
+            JOptionPane.showMessageDialog(null, "Your account was updated!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Your account was NOT updated! check your information");
+        }
+    }
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,7 +119,7 @@ public class Withdraw extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         processBtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        home = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,12 +152,17 @@ public class Withdraw extends javax.swing.JFrame {
 
         processBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         processBtn.setText("Process");
-
-        jButton1.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
-        jButton1.setText("Home");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        processBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                processBtnActionPerformed(evt);
+            }
+        });
+
+        home.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        home.setText("Home");
+        home.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeActionPerformed(evt);
             }
         });
 
@@ -115,7 +201,7 @@ public class Withdraw extends javax.swing.JFrame {
                 .addGap(58, 58, 58))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(jButton1)
+                .addComponent(home)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(processBtn)
                 .addGap(87, 87, 87))
@@ -150,7 +236,7 @@ public class Withdraw extends javax.swing.JFrame {
                         .addGap(60, 60, 60)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(processBtn)
-                    .addComponent(jButton1))
+                    .addComponent(home))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addContainerGap(21, Short.MAX_VALUE))
@@ -170,9 +256,16 @@ public class Withdraw extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void homeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_homeActionPerformed
+
+    private void processBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBtnActionPerformed
+        // TODO add your handling code here:
+        Withdraw();
+        this.dispose();
+    }//GEN-LAST:event_processBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,7 +307,7 @@ public class Withdraw extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> accountIdField;
     private javax.swing.JTextField amountField;
     private javax.swing.JTextArea descriptionTextArea;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton home;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

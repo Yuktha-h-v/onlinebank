@@ -18,16 +18,19 @@ import org.json.JSONObject;
  */
 public class NewAccount extends javax.swing.JFrame {
     Customers customer;
+    boolean isFromRegister;
     /**
      * Creates new form newAccount
      */
     public NewAccount() {
         initComponents();
         customer = new Customers();
+        isFromRegister = false;
     }
 
-    public void setCustomer(Customers customer) {
+    public void setCustomer(Customers customer, boolean isFromRegister) {
         this.customer = customer;
+        this.isFromRegister = isFromRegister;
     }   
 
     /**
@@ -176,8 +179,15 @@ public class NewAccount extends javax.swing.JFrame {
                 .type("application/json").post(ClientResponse.class, entity);
         
         if (response.getStatus() == 204) {
-            JOptionPane.showMessageDialog(null, "You have Succefully created your account!");
+            JOptionPane.showMessageDialog(null, "You have Successfully created your account!");
             
+            //Check to see if this screen was called from the register screen
+            //and launch the main screen
+            if(isFromRegister){
+                MainScreen main = new MainScreen();
+                main.setCurrentCustomer(customer);
+                main.setVisible(true);
+            }
             this.dispose();
         }else{
             JOptionPane.showMessageDialog(null, "Account not created!");

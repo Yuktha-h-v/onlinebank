@@ -12,6 +12,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,7 +28,6 @@ public class MainScreen extends javax.swing.JFrame {
     /**
      * Creates new form mainScreen
      */
-
     public MainScreen() {
         initComponents();
     }
@@ -76,7 +76,7 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    public void setCurrentCustomerAccounts(List<Accounts> currentCustomerAccounts) {
+    private void setCurrentCustomerAccounts(List<Accounts> currentCustomerAccounts) {
         this.currentCustomerAccounts = currentCustomerAccounts;
 
         if (currentCustomerAccounts.size() > 0) {
@@ -91,13 +91,14 @@ public class MainScreen extends javax.swing.JFrame {
                 this.accountIdField2.setText(currentCustomerAccounts.get(1).getAccountId() + "");
                 this.accountTypeField2.setText(currentCustomerAccounts.get(1).getAccountType());
                 this.balanceField2.setText(currentCustomerAccounts.get(1).getAccountBalance() + "");
-            }
-
-            //this will check if we have 3 account and will display the third account in
+            } //this will check if we have 3 account and will display the third account in
             //the third row
-            if (this.currentCustomerAccounts.size() == 3) {
+            else if (this.currentCustomerAccounts.size() == 3) {
+                this.accountIdField2.setText(currentCustomerAccounts.get(1).getAccountId() + "");
+                this.accountTypeField2.setText(currentCustomerAccounts.get(1).getAccountType());
+                this.balanceField2.setText(currentCustomerAccounts.get(1).getAccountBalance() + "");
                 this.accountIdField3.setText(currentCustomerAccounts.get(2).getAccountId() + "");
-                this.accountTypeField3.setText(currentCustomerAccounts.get(3).getAccountType());
+                this.accountTypeField3.setText(currentCustomerAccounts.get(2).getAccountType());
                 this.balanceField3.setText(currentCustomerAccounts.get(2).getAccountBalance() + "");
             }
         }
@@ -135,6 +136,7 @@ public class MainScreen extends javax.swing.JFrame {
         transferBtn = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         refreshButton = new javax.swing.JButton();
+        logOutBtn = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -174,19 +176,43 @@ public class MainScreen extends javax.swing.JFrame {
 
         withdrawBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         withdrawBtn.setText("Withdraw");
+        withdrawBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withdrawBtnActionPerformed(evt);
+            }
+        });
 
         lodgementBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         lodgementBtn.setText("Lodgement");
+        lodgementBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lodgementBtnActionPerformed(evt);
+            }
+        });
 
         transferBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         transferBtn.setText("Transfer");
+        transferBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transferBtnActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Brave Bank, Inc. 2017");
 
+        refreshButton.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         refreshButton.setText("Refresh");
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
+            }
+        });
+
+        logOutBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        logOutBtn.setText("Log Out");
+        logOutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutBtnActionPerformed(evt);
             }
         });
 
@@ -231,7 +257,10 @@ public class MainScreen extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(accountIdField2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(withdrawBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(withdrawBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(logOutBtn)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,7 +281,7 @@ public class MainScreen extends javax.swing.JFrame {
                                 .addContainerGap())
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -285,13 +314,15 @@ public class MainScreen extends javax.swing.JFrame {
                     .addComponent(accountTypeField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(refreshButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(withdrawBtn)
                     .addComponent(lodgementBtn)
                     .addComponent(transferBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(newAccountBtn)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newAccountBtn)
+                    .addComponent(logOutBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addGap(10, 10, 10))
@@ -313,10 +344,13 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void newAccountBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAccountBtnActionPerformed
         // TODO add your handling code here:
-
-        NewAccount newAccount = new NewAccount();
-        newAccount.setCustomer(currentCustomer);
-        newAccount.setVisible(true);
+        if (this.currentCustomerAccounts.size() < 3) {
+            NewAccount newAccount = new NewAccount();
+            newAccount.setCustomer(currentCustomer, false);
+            newAccount.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "You can't add more than 3 accounts!");
+        }
 
 
     }//GEN-LAST:event_newAccountBtnActionPerformed
@@ -327,6 +361,35 @@ public class MainScreen extends javax.swing.JFrame {
             setCurrentCustomerAccounts(getAllAccount());
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void logOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutBtnActionPerformed
+        // TODO add your handling code here:
+        Login login = new Login(); 
+        login.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_logOutBtnActionPerformed
+
+    private void transferBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transferBtnActionPerformed
+        // TODO add your handling code here:
+        Transfer transfer = new Transfer();
+        transfer.setAccount(currentCustomer, currentCustomerAccounts);
+        transfer.setVisible(true);
+    }//GEN-LAST:event_transferBtnActionPerformed
+
+    private void lodgementBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lodgementBtnActionPerformed
+        // TODO add your handling code here:
+        Lodgement lodgement = new Lodgement();
+        lodgement.setAccount(currentCustomerAccounts);
+        lodgement.setVisible(true);
+    }//GEN-LAST:event_lodgementBtnActionPerformed
+
+    private void withdrawBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawBtnActionPerformed
+        // TODO add your handling code here:
+        Withdraw withdraw = new Withdraw();
+        withdraw.setAccount(currentCustomerAccounts);
+        withdraw.setVisible(true);
+    }//GEN-LAST:event_withdrawBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -348,6 +411,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton lodgementBtn;
+    private javax.swing.JButton logOutBtn;
     private javax.swing.JButton newAccountBtn;
     private javax.swing.JButton refreshButton;
     private java.awt.ScrollPane scrollPane1;

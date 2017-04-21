@@ -66,7 +66,7 @@ public class Register extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bbank.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel2.setText("Email");
+        jLabel2.setText("Email:");
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel3.setText("First Name:");
@@ -85,8 +85,6 @@ public class Register extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel8.setText("Password:");
-
-        passwordField.setText("jPasswordField1");
 
         registerBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         registerBtn.setText("Register");
@@ -110,8 +108,7 @@ public class Register extends javax.swing.JFrame {
                         .addComponent(registerBtn))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
+                            .addGap(90, 90, 90)
                             .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel8)
@@ -125,7 +122,8 @@ public class Register extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel5)
                                 .addComponent(jLabel6))
                             .addGap(19, 19, 19)
@@ -257,7 +255,8 @@ public class Register extends javax.swing.JFrame {
         this.currentCustomer.setEmail(obj.getString("email"));
         
         NewAccount newAccount = new NewAccount();
-        newAccount.setCustomer(this.currentCustomer);
+        //Tell the NewAccount Screen that it is being called from the Register Screen
+        newAccount.setCustomer(this.currentCustomer, true);
         newAccount.setVisible(true);
         
         this.dispose();

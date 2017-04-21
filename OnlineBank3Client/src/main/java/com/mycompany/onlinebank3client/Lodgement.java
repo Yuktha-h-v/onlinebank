@@ -5,19 +5,106 @@
  */
 package com.mycompany.onlinebank3client;
 
+import com.mycompany.models.Accounts;
+import com.mycompany.models.Transactions;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import org.json.JSONObject;
+
 /**
  *
  * @author Olga Minguett
  */
 public class Lodgement extends javax.swing.JFrame {
 
+    //local variables
+    List<Accounts> accountsList;
+    List<String> accountIDString;
+    Accounts account;
     /**
      * Creates new form lodgement
      */
     public Lodgement() {
         initComponents();
+        //constructor
+        accountIDString = new ArrayList<>();
+        accountsList = new ArrayList<>();
     }
+ public void setAccount(List<Accounts> acList ){
+        this.accountsList = acList;
+        
+        for(Accounts ac: accountsList){
+            accountIDString.add(ac.getAccountId()+"");
+        }
+        
+        this.accountIdField.setModel(new DefaultComboBoxModel(accountIDString.toArray()));
+        }
+ 
+ public void Lodgement(){
+        String getUrl = "http://localhost:8080/Online_Bank3/api/transactions";
+        Client client = Client.create();
+        WebResource target = client.resource(getUrl);
 
+        account = accountsList.get(accountIdField.getSelectedIndex());
+               
+        
+        //Adding amount from balance
+        BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
+                     
+            Transactions tran = new Transactions();
+            tran.setAccountId(account);
+            tran.setAmount(amount);
+            tran.setCustomerId(account.getCustomerId());
+            tran.setDescription(descriptionField.getText());
+            tran.setTransactionType("Lodgement");
+            
+            JSONObject param = new JSONObject(tran);
+
+            String entity = param.toString();
+            //creates the POST request
+            ClientResponse response = target.accept("application/json")
+                    .type("application/json").post(ClientResponse.class, entity);
+            
+            if (response.getStatus() == 204) {
+                
+                JOptionPane.showMessageDialog(null, "You lodgement has been successful!");
+                
+                BigDecimal newBalance = account.getAccountBalance().add(amount);
+                //set new balance to from account
+                account.setAccountBalance(newBalance);
+                //send update account information to the api
+                UpdateAccount(account);
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "We couldn't process your request!");
+                System.out.println(response.getEntity(String.class));
+            }
+            
+        }
+ 
+ private void UpdateAccount(Accounts account){
+        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/"+account.getAccountId();
+        Client client = Client.create();
+        WebResource target = client.resource(getUrl);
+        
+        JSONObject entity = new JSONObject(account);
+        
+        ClientResponse putresponse = target.accept("application/json")
+                    .type("application/json").put(ClientResponse.class, entity.toString());
+        
+        if (putresponse.getStatus() == 204) {
+            JOptionPane.showMessageDialog(null, "Your account was updated!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Your account was NOT updated! check your information");
+        }
+    }
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,10 +120,10 @@ public class Lodgement extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         accountIdField = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        amountField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        descriptionField = new javax.swing.JTextArea();
         processBtn = new javax.swing.JButton();
         home = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -59,21 +146,31 @@ public class Lodgement extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel4.setText("Amount:");
 
-        jTextField1.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        amountField.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel5.setText("Description:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        descriptionField.setColumns(20);
+        descriptionField.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        descriptionField.setRows(5);
+        jScrollPane1.setViewportView(descriptionField);
 
         processBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         processBtn.setText("Process");
+        processBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processBtnActionPerformed(evt);
+            }
+        });
 
         home.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         home.setText("Home");
+        home.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Brave Bank, Inc. 2017");
 
@@ -109,7 +206,7 @@ public class Lodgement extends javax.swing.JFrame {
                                         .addGap(37, 37, 37)))))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(accountIdField, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1)
+                            .addComponent(amountField)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
                 .addGap(49, 49, 49))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -136,7 +233,7 @@ public class Lodgement extends javax.swing.JFrame {
                             .addComponent(accountIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(amountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -146,8 +243,7 @@ public class Lodgement extends javax.swing.JFrame {
                             .addComponent(home)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(140, 140, 140)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -166,6 +262,17 @@ public class Lodgement extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void processBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBtnActionPerformed
+        // TODO add your handling code here:
+        Lodgement();
+        this.dispose();
+    }//GEN-LAST:event_processBtnActionPerformed
+
+    private void homeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_homeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,6 +312,8 @@ public class Lodgement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> accountIdField;
+    private javax.swing.JTextField amountField;
+    private javax.swing.JTextArea descriptionField;
     private javax.swing.JButton home;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -214,8 +323,6 @@ public class Lodgement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton processBtn;
     // End of variables declaration//GEN-END:variables
 }

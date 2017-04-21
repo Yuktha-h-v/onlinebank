@@ -62,8 +62,6 @@ public class Login extends javax.swing.JFrame {
     }
     
     
-            
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,8 +92,6 @@ public class Login extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel3.setText("Password:");
-
-        passwordField.setText("jPasswordField1");
 
         loginBtn.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         loginBtn.setText("Login");
@@ -142,7 +138,7 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))))
                 .addGap(74, 74, 74))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(144, 144, 144)
+                .addGap(130, 130, 130)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

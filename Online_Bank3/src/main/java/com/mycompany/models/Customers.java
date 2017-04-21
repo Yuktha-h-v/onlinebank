@@ -87,8 +87,6 @@ public class Customers implements Serializable {
     private Collection<Accounts> accountsCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerId")
     private Collection<Transactions> transactionsCollection;
-    @OneToMany(mappedBy = "customerIdTo")
-    private Collection<Transactions> transactionsCollection1;
 
     public Customers() {
     }
@@ -186,15 +184,6 @@ public class Customers implements Serializable {
 
     public void setTransactionsCollection(Collection<Transactions> transactionsCollection) {
         this.transactionsCollection = transactionsCollection;
-    }
-
-    @XmlTransient
-    public Collection<Transactions> getTransactionsCollection1() {
-        return transactionsCollection1;
-    }
-
-    public void setTransactionsCollection1(Collection<Transactions> transactionsCollection1) {
-        this.transactionsCollection1 = transactionsCollection1;
     }
 
     @Override

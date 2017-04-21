@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,6 +32,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Transactions.findAll", query = "SELECT t FROM Transactions t")
     , @NamedQuery(name = "Transactions.findByTransactionId", query = "SELECT t FROM Transactions t WHERE t.transactionId = :transactionId")
+    , @NamedQuery(name = "Transactions.findByCustomerIdTo", query = "SELECT t FROM Transactions t WHERE t.customerIdTo = :customerIdTo")
+    , @NamedQuery(name = "Transactions.findByAccountIdTo", query = "SELECT t FROM Transactions t WHERE t.accountIdTo = :accountIdTo")
     , @NamedQuery(name = "Transactions.findByTransactionType", query = "SELECT t FROM Transactions t WHERE t.transactionType = :transactionType")
     , @NamedQuery(name = "Transactions.findByAmount", query = "SELECT t FROM Transactions t WHERE t.amount = :amount")
     , @NamedQuery(name = "Transactions.findByDescription", query = "SELECT t FROM Transactions t WHERE t.description = :description")})
@@ -37,10 +41,14 @@ public class Transactions implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "transaction_id")
     private Integer transactionId;
+    @Column(name = "customer_id_to")
+    private Integer customerIdTo;
+    @Column(name = "account_id_to")
+    private Integer accountIdTo;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
@@ -62,12 +70,6 @@ public class Transactions implements Serializable {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @ManyToOne(optional = false)
     private Accounts accountId;
-    @JoinColumn(name = "customer_id_to", referencedColumnName = "customer_id")
-    @ManyToOne
-    private Customers customerIdTo;
-    @JoinColumn(name = "account_id_to", referencedColumnName = "account_id")
-    @ManyToOne
-    private Accounts accountIdTo;
 
     public Transactions() {
     }
@@ -89,6 +91,22 @@ public class Transactions implements Serializable {
 
     public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public Integer getCustomerIdTo() {
+        return customerIdTo;
+    }
+
+    public void setCustomerIdTo(Integer customerIdTo) {
+        this.customerIdTo = customerIdTo;
+    }
+
+    public Integer getAccountIdTo() {
+        return accountIdTo;
+    }
+
+    public void setAccountIdTo(Integer accountIdTo) {
+        this.accountIdTo = accountIdTo;
     }
 
     public String getTransactionType() {
@@ -129,22 +147,6 @@ public class Transactions implements Serializable {
 
     public void setAccountId(Accounts accountId) {
         this.accountId = accountId;
-    }
-
-    public Customers getCustomerIdTo() {
-        return customerIdTo;
-    }
-
-    public void setCustomerIdTo(Customers customerIdTo) {
-        this.customerIdTo = customerIdTo;
-    }
-
-    public Accounts getAccountIdTo() {
-        return accountIdTo;
-    }
-
-    public void setAccountIdTo(Accounts accountIdTo) {
-        this.accountIdTo = accountIdTo;
     }
 
     @Override

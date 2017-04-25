@@ -8,13 +8,12 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-04-21T17:09:03")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-04-24T17:05:24")
 @StaticMetamodel(Customers.class)
 public class Customers_ { 
 
     public static volatile SingularAttribute<Customers, String> firstname;
     public static volatile SingularAttribute<Customers, String> password;
-    public static volatile CollectionAttribute<Customers, Transactions> transactionsCollection1;
     public static volatile SingularAttribute<Customers, String> address;
     public static volatile CollectionAttribute<Customers, Accounts> accountsCollection;
     public static volatile SingularAttribute<Customers, Integer> customerId;

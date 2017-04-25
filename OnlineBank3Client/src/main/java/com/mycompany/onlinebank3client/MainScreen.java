@@ -16,20 +16,26 @@ import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class MainScreen extends javax.swing.JFrame {
-
+    //local variables
     Customers currentCustomer;
     List<Accounts> currentCustomerAccounts;
 
-    /**
-     * Creates new form mainScreen
-     */
+     // Creates new form mainScreen
     public MainScreen() {
         initComponents();
+        // set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
+        
     }
 
     public List<Accounts> getAllAccount() {
@@ -39,16 +45,17 @@ public class MainScreen extends javax.swing.JFrame {
 
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-
+        //@reference: http://stackoverflow.com/questions/27341788/jersey-clientresponse-getentity-of-generic-type
         ClientResponse response = target
                 .get(ClientResponse.class);
-
+        //for closing the client
         client.destroy();
         String data = response.getEntity(String.class);
+        //@reference: http://stackoverflow.com/questions/2544119/how-do-i-create-a-json-array
         JSONArray array = new JSONArray(data);
 
         Accounts ac;
-
+        //Creating the customer account information and saving in the array list
         for (int i = 0; i < array.length(); i++) {
             //represent account
             JSONObject obj = array.getJSONObject(i);
@@ -344,6 +351,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void newAccountBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAccountBtnActionPerformed
         // TODO add your handling code here:
+        //Customer with no more than 3 accounts
         if (this.currentCustomerAccounts.size() < 3) {
             NewAccount newAccount = new NewAccount();
             newAccount.setCustomer(currentCustomer, false);
@@ -351,12 +359,11 @@ public class MainScreen extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "You can't add more than 3 accounts!");
         }
-
-
     }//GEN-LAST:event_newAccountBtnActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         // TODO add your handling code here:
+        //Update all the action performed in the app
         if (currentCustomer != null) {
             setCurrentCustomerAccounts(getAllAccount());
         }
@@ -365,6 +372,8 @@ public class MainScreen extends javax.swing.JFrame {
     private void logOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutBtnActionPerformed
         // TODO add your handling code here:
         Login login = new Login(); 
+        //@reference: https://www.java-forums.org/new-java/71400-what-does-setvisible-actually-do.html
+        //make visible the components for the user
         login.setVisible(true);
         this.dispose();
 

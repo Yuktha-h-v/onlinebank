@@ -15,17 +15,26 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class Register extends javax.swing.JFrame {
-     Customers currentCustomer;
-    //private WebTarget target;
+
+    Customers currentCustomer;
+
+    
     /**
      * Creates new form register
      */
     public Register() {
+        // set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
         initComponents();
         this.currentCustomer = new Customers();
     }
@@ -200,12 +209,12 @@ public class Register extends javax.swing.JFrame {
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         // TODO add your handling code here:
         String getUrl = "http://localhost:8080/Online_Bank3/api/customers";
-        Customers c = null;   
+        Customers c = null;
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-
+        //@reference: http://stackoverflow.com/questions/983964/why-does-jpasswordfield-getpassword-create-a-string-with-the-password-in-it
         String pass = new String(passwordField.getPassword());
-        
+
         JSONObject param = new JSONObject();
         param.put("address", addressField.getText());
         //param.put("customerId", 107);
@@ -215,54 +224,56 @@ public class Register extends javax.swing.JFrame {
         param.put("password", pass);
         //param.put("dateOfBirth", new Date());
         param.put("user", userField.getText());
-        
+
         String entity = param.toString();
-       
+
         ClientResponse response = target.accept("application/json")
                 .type("application/json").post(ClientResponse.class, entity);
-        
+
         if (response.getStatus() == 204) {
             JOptionPane.showMessageDialog(null, "You have Succefully created your account!");
             login(userField.getText(), pass);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Account not created!");
         }
     }//GEN-LAST:event_registerBtnActionPerformed
 
-    
-    public void login(String username, String password){
+    public void login(String username, String password) {
         String getUrl = "http://localhost:8080/Online_Bank3/api/customers/login";
         Customers c = null;
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
         
+        //Using Query parameters for the login of the user
         ClientResponse response = target
                 .queryParam("username", username)
                 .queryParam("password", password)
                 .get(ClientResponse.class);
         
-        String data = response.getEntity(String.class);        
-        
+        //Convert the response from API into string
+        String data = response.getEntity(String.class);
+
         JSONObject obj = new JSONObject(data);
-        
+
         this.currentCustomer = new Customers(obj.getInt("customerId"),
-        obj.getString("firstname"),
-        obj.getString("lastname"),
-        obj.getString("user"),
-        obj.getString("password"),
-        obj.getString("address"));
-        
+                obj.getString("firstname"),
+                obj.getString("lastname"),
+                obj.getString("user"),
+                obj.getString("password"),
+                obj.getString("address"));
+
         this.currentCustomer.setEmail(obj.getString("email"));
-        
+
         NewAccount newAccount = new NewAccount();
         //Tell the NewAccount Screen that it is being called from the Register Screen
         newAccount.setCustomer(this.currentCustomer, true);
         newAccount.setVisible(true);
-        
+        //dispose the page in GUI that the user is in
+        //@reference: http://stackoverflow.com/questions/8632705/how-to-close-a-gui-when-i-push-a-jbutton
         this.dispose();
-        
+
     }
-    
+
     /**
      * @param args the command line arguments
      */

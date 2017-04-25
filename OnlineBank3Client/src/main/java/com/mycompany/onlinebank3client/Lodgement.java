@@ -17,94 +17,118 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class Lodgement extends javax.swing.JFrame {
-
+    //Creates new form Lodgement
     //local variables
     List<Accounts> accountsList;
     List<String> accountIDString;
     Accounts account;
+
     /**
      * Creates new form lodgement
      */
     public Lodgement() {
         initComponents();
-        //constructor
+
+        //set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
+
+        //create a new object for the array
         accountIDString = new ArrayList<>();
         accountsList = new ArrayList<>();
     }
- public void setAccount(List<Accounts> acList ){
+
+    //setter 
+    //This method set the account and value that the user has entered
+    public void setAccount(List<Accounts> acList) {
         this.accountsList = acList;
-        
-        for(Accounts ac: accountsList){
-            accountIDString.add(ac.getAccountId()+"");
+
+        for (Accounts ac : accountsList) {
+            accountIDString.add(ac.getAccountId() + "");
         }
-        
+
         this.accountIdField.setModel(new DefaultComboBoxModel(accountIDString.toArray()));
-        }
- 
- public void Lodgement(){
+    }
+
+    public void Lodgement() {
+        //Path to show the transactions the user just made
         String getUrl = "http://localhost:8080/Online_Bank3/api/transactions";
+        //creates a web instance for this especific account
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-
+        //Displays the accounts in the ComboBox
         account = accountsList.get(accountIdField.getSelectedIndex());
-               
-        
-        //Adding amount from balance
-        BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
-                     
-            Transactions tran = new Transactions();
-            tran.setAccountId(account);
-            tran.setAmount(amount);
-            tran.setCustomerId(account.getCustomerId());
-            tran.setDescription(descriptionField.getText());
-            tran.setTransactionType("Lodgement");
-            
-            JSONObject param = new JSONObject(tran);
 
-            String entity = param.toString();
-            //creates the POST request
-            ClientResponse response = target.accept("application/json")
-                    .type("application/json").post(ClientResponse.class, entity);
-            
-            if (response.getStatus() == 204) {
-                
-                JOptionPane.showMessageDialog(null, "You lodgement has been successful!");
-                
-                BigDecimal newBalance = account.getAccountBalance().add(amount);
-                //set new balance to from account
-                account.setAccountBalance(newBalance);
-                //send update account information to the api
-                UpdateAccount(account);
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "We couldn't process your request!");
-                System.out.println(response.getEntity(String.class));
-            }
-            
+        //Adding amount from balance
+        //Bigdecimal converted to double because it's the data type
+        //the system is expecting.(MySQL)
+        //@reference:http://stackoverflow.com/questions/5749615/losing-precision-converting-from-java-bigdecimal-to-double
+        BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
+
+        //We are setting all the information that we need to get to deliver the process
+        //From the current customer and account
+        Transactions tran = new Transactions();
+        tran.setAccountId(account);
+        tran.setAmount(amount);
+        tran.setCustomerId(account.getCustomerId());
+        tran.setDescription(descriptionField.getText());
+        tran.setTransactionType("Lodgement");
+
+        //create the JSON object
+        JSONObject param = new JSONObject(tran);
+        //change back to string because the POST request wants a string version of the JSON
+        //@reference: http://stackoverflow.com/questions/17651395/convert-jsonobject-to-string
+        String entity = param.toString();
+        //creates the POST request
+        ClientResponse response = target.accept("application/json")
+                .type("application/json").post(ClientResponse.class, entity);
+        // It's 204 because we are not getting content and we are checking if it is correct
+        //@reference: http://stackoverflow.com/questions/16284743/how-to-submit-data-with-jersey-client-post-method
+        //@reference: httpstatuses.com/204
+        if (response.getStatus() == 204) {
+
+            JOptionPane.showMessageDialog(null, "You lodgement has been successful!");
+
+            BigDecimal newBalance = account.getAccountBalance().add(amount);
+            //set new balance to from account
+            account.setAccountBalance(newBalance);
+            //send update account information to the api
+            UpdateAccount(account);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "We couldn't process your request!");
+            System.out.println(response.getEntity(String.class));
         }
- 
- private void UpdateAccount(Accounts account){
-        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/"+account.getAccountId();
+
+    }
+
+    // use for updating account and its values
+    private void UpdateAccount(Accounts account) {
+        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/" + account.getAccountId();
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-        
+
         JSONObject entity = new JSONObject(account);
-        
+        //@reference: http://stackoverflow.com/questions/27314049/put-method-restful-doesnt-work-as-a-way-to-update-resources
         ClientResponse putresponse = target.accept("application/json")
-                    .type("application/json").put(ClientResponse.class, entity.toString());
-        
+                .type("application/json").put(ClientResponse.class, entity.toString());
+
         if (putresponse.getStatus() == 204) {
             JOptionPane.showMessageDialog(null, "Your account was updated!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Your account was NOT updated! check your information");
         }
     }
- 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -265,12 +289,17 @@ public class Lodgement extends javax.swing.JFrame {
 
     private void processBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processBtnActionPerformed
         // TODO add your handling code here:
+        // Calling the method that we have created before
+        //This process the action.
         Lodgement();
+        //dispose the page in GUI that the user is in
+        //@reference: http://stackoverflow.com/questions/8632705/how-to-close-a-gui-when-i-push-a-jbutton
         this.dispose();
     }//GEN-LAST:event_processBtnActionPerformed
 
     private void homeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeActionPerformed
         // TODO add your handling code here:
+
         this.dispose();
     }//GEN-LAST:event_homeActionPerformed
 

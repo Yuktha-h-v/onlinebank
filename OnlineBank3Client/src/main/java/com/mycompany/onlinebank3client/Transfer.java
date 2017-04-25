@@ -18,56 +18,71 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class Transfer extends javax.swing.JFrame {
 
-    /**
-     * Creates new form transfer
-     */
-    
+   
+    //Creates new form transfer
+    //local variables
     Customers currentCustomer;
     List<Accounts> accountsList;
     List<String> accountIDString;
     Accounts fromAccount, toAccount;
-    
+
     public Transfer() {
+
+        // set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
         initComponents();
-        
+        //create a new object for the array
         accountIDString = new ArrayList<>();
-        accountsList = new ArrayList<>();        
-       /* this.currentCustomer = currentCustomer;  */
+        accountsList = new ArrayList<>();
+        
     }
-    
-    public void setAccount(Customers c,List<Accounts> acList ){
+    //setter 
+    //This method set the account and value that the user has entered
+
+    public void setAccount(Customers c, List<Accounts> acList) {
         this.currentCustomer = c;
         this.accountsList = acList;
-        
-        for(Accounts ac: accountsList){
-            accountIDString.add(ac.getAccountId()+"");
+
+        for (Accounts ac : accountsList) {
+            accountIDString.add(ac.getAccountId() + "");
         }
-        
+
         this.accountIdField.setModel(new DefaultComboBoxModel(accountIDString.toArray()));
         this.accountIdToField.setModel(new DefaultComboBoxModel(accountIDString.toArray()));
     }
 
-    public void Transfer(){
+    public void Transfer() {
+        //Path to show the transactions the user just made
         String getUrl = "http://localhost:8080/Online_Bank3/api/transactions";
+        //creates a web instance for this especific account
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-
+        //Displays the accounts in the ComboBox
         fromAccount = accountsList.get(accountIdField.getSelectedIndex());
         toAccount = accountsList.get(accountIdToField.getSelectedIndex());
-        
-        
+
         //Subtracting amount from ballance
-        BigDecimal amount  = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
-        if(fromAccount.getAccountBalance().compareTo(amount) == -1){
+        //Bigdecimal converted to double because it's the data type
+        //the system is expecting.(MySQL)
+        //@reference:http://stackoverflow.com/questions/5749615/losing-precision-converting-from-java-bigdecimal-to-double
+        BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountField.getText()));
+        if (fromAccount.getAccountBalance().compareTo(amount) == -1) {
             JOptionPane.showMessageDialog(null, "Insufficient Credit \n Try another value");
-        }else{
-            
+        } else {
+
+            //We are setting all the information that we need to get to deliver the process
+            //From the current customer and account
             Transactions tran = new Transactions();
             tran.setAccountId(fromAccount);
             tran.setAccountIdTo(toAccount.getAccountId());
@@ -76,55 +91,57 @@ public class Transfer extends javax.swing.JFrame {
             tran.setCustomerIdTo(currentCustomer.getCustomerId());
             tran.setDescription(descriptionField.getText());
             tran.setTransactionType("Transfer");
-            
+            //create the JSON object
+
             JSONObject param = new JSONObject(tran);
-
-
+            //change back to string because the POST request wants a string version of the JSON
+            //@reference: http://stackoverflow.com/questions/17651395/convert-jsonobject-to-string
             String entity = param.toString();
-            
+            //creates the POST request
+            //@reference: http://stackoverflow.com/questions/16284743/how-to-submit-data-with-jersey-client-post-method
             ClientResponse response = target.accept("application/json")
                     .type("application/json").post(ClientResponse.class, entity);
-            
+            // It's 204 because we are not getting content
+            //@reference: http://www.programcreek.com/java-api-examples/index.php?class=retrofit.client.Response&method=getStatus
+            //@reference: httpstatuses.com/204
             if (response.getStatus() == 204) {
-                
+
                 JOptionPane.showMessageDialog(null, "You transfer successfully between your accounts!");
-                
+
                 BigDecimal newBalance = fromAccount.getAccountBalance().subtract(amount);
-                //set new ballance to from account
+                //set new balance to from account
                 fromAccount.setAccountBalance(newBalance);
                 //send update account information to the api
                 UpdateAccount(fromAccount);
-
                 //set the new balance of the account
                 toAccount.setAccountBalance(toAccount.getAccountBalance().add(amount));
                 //send update account information to the api
                 UpdateAccount(toAccount);
-            }else{
+            } else {
                 System.out.println(response.getEntity(String.class));
             }
-            
+
         }
     }
-    
-    //do not change, use for updating account
-    private void UpdateAccount(Accounts account){
-        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/"+account.getAccountId();
+
+    // use for updating account and its values
+    private void UpdateAccount(Accounts account) {
+        String getUrl = "http://localhost:8080/Online_Bank3/api/accounts/" + account.getAccountId();
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-        
+
         JSONObject entity = new JSONObject(account);
-        
+        //@reference: http://stackoverflow.com/questions/27314049/put-method-restful-doesnt-work-as-a-way-to-update-resources
         ClientResponse putresponse = target.accept("application/json")
-                    .type("application/json").put(ClientResponse.class, entity.toString());
-        
+                .type("application/json").put(ClientResponse.class, entity.toString());
+
         if (putresponse.getStatus() == 204) {
             JOptionPane.showMessageDialog(null, "Your account was updated!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Your account was NOT updated! check your information");
         }
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -303,11 +320,15 @@ public class Transfer extends javax.swing.JFrame {
 
     private void homeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeActionPerformed
         // TODO add your handling code here:
+        //dispose the page in GUI that the user is in
+        //@reference: http://stackoverflow.com/questions/8632705/how-to-close-a-gui-when-i-push-a-jbutton
         this.dispose();
     }//GEN-LAST:event_homeActionPerformed
 
     private void prossesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prossesButtonActionPerformed
         // TODO add your handling code here:
+        // Calling the method that we have created before
+        //This process the action.
         Transfer();
     }//GEN-LAST:event_prossesButtonActionPerformed
 

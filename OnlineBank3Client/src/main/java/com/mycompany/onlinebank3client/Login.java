@@ -15,53 +15,56 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class Login extends javax.swing.JFrame {
-
+    //local variables
     Customers currentCustomer;
-    /**
-     * Creates new form login
-     */
+
+    //Creates new form login
     public Login() {
-        
         initComponents();
-        
+        // set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
+
         this.currentCustomer = new Customers();
     }
-    
-    public void login(){
+
+    public void login() {
         String getUrl = "http://localhost:8080/Online_Bank3/api/customers/login";
         Customers c = null;
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-
+        //@reference: http://stackoverflow.com/questions/983964/why-does-jpasswordfield-getpassword-create-a-string-with-the-password-in-it
         String pass = new String(passwordField.getPassword());
-        
+        //@reference: http://stackoverflow.com/questions/27341788/jersey-clientresponse-getentity-of-generic-type
         ClientResponse response = target
                 .queryParam("username", userField.getText())
                 .queryParam("password", pass)
                 .get(ClientResponse.class);
-        
+
         String data = response.getEntity(String.class);
         System.out.println(data);
-        
-        
+        //create the JSON object
         JSONObject obj = new JSONObject(data);
-        
+        //@reference: https://processing.org/reference/JSONObject_getString_.html
         this.currentCustomer = new Customers(obj.getInt("customerId"),
-        obj.getString("firstname"),
-        obj.getString("lastname"),
-        obj.getString("user"),
-        obj.getString("password"),
-        obj.getString("address"));
-        
-        this.currentCustomer.setEmail(obj.getString("email"));        
+                obj.getString("firstname"),
+                obj.getString("lastname"),
+                obj.getString("user"),
+                obj.getString("password"),
+                obj.getString("address"));
+
+        this.currentCustomer.setEmail(obj.getString("email"));
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,20 +183,22 @@ public class Login extends javax.swing.JFrame {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         // TODO add your handling code here:
+        // Calling the method that we have created before
+        //This process the action.
         login();
-        
+
         ///This will check if customer detail is found and has logged in succesfully
-        if(this.currentCustomer != null){
-            
+        if (this.currentCustomer != null) {
+
             //Declare and Initialize the Main Screen
             MainScreen main = new MainScreen();
-            
+
             //send the current customer detail to the main screen
             main.setCurrentCustomer(currentCustomer);
-            
+
             //Make the main screen visible
             main.setVisible(true);
-            
+
             //Dispose of the Login screen
             this.dispose();
         }
@@ -202,7 +207,11 @@ public class Login extends javax.swing.JFrame {
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         // TODO add your handling code here:
         Register register = new Register();
+        //@reference: https://www.java-forums.org/new-java/71400-what-does-setvisible-actually-do.html
+        //make visible the components for the user
         register.setVisible(true);
+        //dispose the page in GUI that the user is in
+        //@reference: http://stackoverflow.com/questions/8632705/how-to-close-a-gui-when-i-push-a-jbutton
         this.dispose();
     }//GEN-LAST:event_registerBtnActionPerformed
 

@@ -12,17 +12,26 @@ import com.sun.jersey.api.client.WebResource;
 import javax.swing.JOptionPane;
 import org.json.JSONObject;
 
-/**
- *
- * @author Olga Minguett
+/*
+ * @author(s): Carlos Amaro, Olga Minguett, Mariah Sonja
+ * Title: OnlineBank3Client
+ * Date: April, 2017
+ * National College of Ireland
+ * Web Services and API Development
+ * Lecturer: Julie Power
  */
 public class NewAccount extends javax.swing.JFrame {
+    //local variables
     Customers customer;
     boolean isFromRegister;
+
     /**
      * Creates new form newAccount
      */
     public NewAccount() {
+        // set the panel to the center
+        //@reference: https://www.youtube.com/watch?v=xGzeEUHcsj8
+        this.setLocationRelativeTo(null);
         initComponents();
         customer = new Customers();
         isFromRegister = false;
@@ -31,7 +40,7 @@ public class NewAccount extends javax.swing.JFrame {
     public void setCustomer(Customers customer, boolean isFromRegister) {
         this.customer = customer;
         this.isFromRegister = isFromRegister;
-    }   
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -149,17 +158,16 @@ public class NewAccount extends javax.swing.JFrame {
 
     private void addNewAccountBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewAccountBtnActionPerformed
         // TODO add your handling code here:
-        
+
         String getUrl = "http://localhost:8080/Online_Bank3/api/accounts";
-        Customers c = null;   
+        Customers c = null;
         Client client = Client.create();
         WebResource target = client.resource(getUrl);
-        
+
         JSONObject param = new JSONObject();
         param.put("accountBalance", 0);
-        //param.put("accountId", 101);
         param.put("accountType", this.accountTypeField.getSelectedItem().toString());
-        
+
         JSONObject accountParam = new JSONObject();
         accountParam.put("address", customer.getAddress());
         accountParam.put("customerId", customer.getCustomerId());
@@ -169,27 +177,27 @@ public class NewAccount extends javax.swing.JFrame {
         accountParam.put("password", customer.getPassword());
         accountParam.put("dateOfBirth", customer.getDateOfBirth());
         accountParam.put("user", customer.getUser());
-        
-        param.put("customerId",accountParam);
-        
+
+        param.put("customerId", accountParam);
+
         String entity = param.toString();
-       
+
         System.out.println(param.toString());
         ClientResponse response = target.accept("application/json")
                 .type("application/json").post(ClientResponse.class, entity);
-        
+
         if (response.getStatus() == 204) {
             JOptionPane.showMessageDialog(null, "You have Successfully created your account!");
-            
+
             //Check to see if this screen was called from the register screen
             //and launch the main screen
-            if(isFromRegister){
+            if (isFromRegister) {
                 MainScreen main = new MainScreen();
                 main.setCurrentCustomer(customer);
                 main.setVisible(true);
             }
             this.dispose();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Account not created!");
         }
     }//GEN-LAST:event_addNewAccountBtnActionPerformed
